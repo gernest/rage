@@ -1,4 +1,4 @@
-package main
+package rage
 
 func assign() *Commander {
 	return &Commander{

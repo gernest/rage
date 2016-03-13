@@ -1,4 +1,4 @@
-package main
+package rage
 
 var boadrDescription = `
 board is a namespace in which you can manage cards

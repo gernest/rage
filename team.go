@@ -1,4 +1,4 @@
-package main
+package rage
 
 func team() *Commander {
 	return &Commander{
