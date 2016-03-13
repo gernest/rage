@@ -1,0 +1,142 @@
+package main
+
+import (
+	"bufio"
+	"errors"
+	"fmt"
+	"runtime"
+	"strings"
+
+	"github.com/gosuri/uitable"
+)
+
+// CommaandArgs is the parsed commands from the os.Stdin.
+type CommaandArgs struct {
+
+	// Name is the first command parsed on the rage she;;
+	Name string
+
+	//Sub command is the second argument passed on the rage shell
+	Subcommand string
+
+	// Args is  everything else after the command and subcommand. This is a slice
+	// of words not complete strings, so you can join them to actually get the
+	// complete text
+	Args []string
+}
+
+//LoadCommandArgs returns *CommandArgs from the rsc, src is a slice of words
+//which are passed to the rage console
+//
+// The assumption is the first element [0] is the command, and the second if any
+// [1] is the subcommand, the reminder os the elemnts are kep as is and acts
+// arguments to the command or subcommand.
+func LoadCommandArgs(src []string) *CommaandArgs {
+	cmd := &CommaandArgs{}
+	switch len(src) {
+	case 0:
+		return nil
+	case 1:
+		cmd.Name = src[0]
+	case 2:
+		cmd.Name, cmd.Subcommand = src[0], src[1]
+	default:
+		cmd.Name, cmd.Subcommand = src[0], src[1]
+		cmd.Args = append(cmd.Args, src[2:]...)
+	}
+	return cmd
+}
+
+//Commander is the instace of the commandline processor, for coomands passed on
+//the rage console
+type Commander struct {
+	Name        string
+	Description string
+	Short       string // short description of the command
+	Subcommands []*Commander
+	Exec        Command
+}
+
+//Command is an interface for a function that exutes a command.
+//
+// It is good practice to always return nil even when there was an error in
+// exution , since if returned error is not nil then the rage console retimates
+//
+// Return error when you want the shell to be exited, for instance you can
+// return an error when implementing the exit command( see function exit) as an
+// example
+type Command func(*Context, *CommaandArgs) error
+
+func parseArgsLine(line string) ([]string, error) {
+	s := bufio.NewScanner(strings.NewReader(line))
+	s.Split(bufio.ScanWords)
+	var cmds []string
+	for s.Scan() {
+		cmds = append(cmds, s.Text())
+	}
+	if err := s.Err(); err != nil {
+		return nil, err
+	}
+	return cmds, nil
+}
+
+/*
+
+	SOME UTILITY COMMANDS FOR RAGE
+
+*/
+func help() *Commander {
+	return &Commander{
+		Name:        "help",
+		Description: "shows the help message for a command",
+		Exec: func(ctx *Context, cmd *CommaandArgs) error {
+			if cmd.Subcommand != "" {
+				ctx.Help(cmd.Subcommand)
+				return nil
+			}
+			for _, c := range ctx.Commands {
+				printShort(ctx, c)
+			}
+			return nil
+		},
+	}
+}
+
+// print hep message but with only short description
+func printShort(ctx *Context, cmd *Commander) {
+	table := uitable.New()
+	table.MaxColWidth = 80
+	table.Wrap = true
+	table.AddRow(cmd.Name, cmd.Short)
+	if len(cmd.Subcommands) > 0 {
+		table.AddRow("---")
+	}
+	for _, sub := range cmd.Subcommands {
+		table.AddRow("  "+sub.Name, sub.Short)
+	}
+	fmt.Println(table)
+}
+
+func clear() *Commander {
+	return &Commander{
+		Name:        "clear",
+		Description: "clears the screen",
+		Exec:        clearScreen,
+	}
+}
+func clearScreen(ctx *Context, args *CommaandArgs) error {
+	switch runtime.GOOS {
+	case "darwin", "linux":
+		fmt.Print("\033[H\033[2J")
+	}
+	return nil
+}
+func exit() *Commander {
+	return &Commander{
+		Name:        "exit",
+		Description: "exits the rage shell",
+		Exec: func(ctx *Context, cmd *CommaandArgs) error {
+			return errors.New("exiting rage shell")
+		},
+	}
+}
