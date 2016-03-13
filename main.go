@@ -4,15 +4,16 @@ import (
 	"fmt"
 
 	"github.com/chzyer/readline"
-	"github.com/gosuri/uitable"
 )
 
+// Rage is the rage application
 type Rage struct {
 	cmds       map[string]Command
 	ctx        *Context
 	commanders map[string]*Commander
 }
 
+//NewRage retturns a new instance of* Rage
 func NewRage() *Rage {
 	return &Rage{
 		cmds:       make(map[string]Command),
@@ -21,10 +22,13 @@ func NewRage() *Rage {
 	}
 }
 
+//Register registers cmd into the rage application. registering the same command
+// result into reasigning the command name to the new command
 func (r *Rage) Register(c *Commander) {
 	r.ctx.Commands = append(r.ctx.Commands, c)
 }
 
+//Exec executes the command that matches cmd
 func (r *Rage) Exec(cmd *CommaandArgs) error {
 	for _, c := range r.ctx.Commands {
 		if c.Name == cmd.Name {
@@ -35,12 +39,13 @@ func (r *Rage) Exec(cmd *CommaandArgs) error {
 	return nil
 }
 
+//Run runs the rage application, it boots up an interactive shell.
 func (r *Rage) Run() {
 	rl, err := readline.New("rage> ")
 	if err != nil {
 		panic(err)
 	}
-	defer rl.Close()
+	defer func() { _ = rl.Close() }()
 
 	/*
 
@@ -80,19 +85,6 @@ func (r *Rage) Run() {
 		}
 	}
 	fmt.Println(msg)
-}
-
-func (r *Rage) Help(ctx *Context, cmd *CommaandArgs) error {
-	table := uitable.New()
-	table.MaxColWidth = 80
-	table.Wrap = true // wrap columns
-
-	table.AddRow("command name", "description")
-	for k, _ := range r.cmds {
-		table.AddRow(k, k) // blank
-	}
-	fmt.Println(table)
-	return nil
 }
 
 func main() {

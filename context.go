@@ -7,11 +7,14 @@ import (
 	"github.com/gosuri/uitable"
 )
 
+//Context is the environmant in which the commands are executed
 type Context struct {
 	Commands []*Commander
 	Stdout   io.Writer
 }
 
+//Help prints the hep message for the command  or optionally the subcommand  of
+//command cmd if provided
 func (ctx *Context) Help(cmd string, sub ...string) {
 	args := struct {
 		command, subcommand string
@@ -39,6 +42,8 @@ func (ctx *Context) Help(cmd string, sub ...string) {
 	}
 	println("unrecognised command " + args.command)
 }
+
+//Printhelp prints cmd in a good interface
 func (ctx *Context) Printhelp(cmd *Commander) {
 	table := uitable.New()
 	table.MaxColWidth = 80
