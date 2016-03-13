@@ -1,3 +1,4 @@
+//Package rage is just like trello but on the terminal.
 package rage
 
 import (
@@ -11,7 +12,7 @@ import (
 	"github.com/gosuri/uitable"
 )
 
-// CommaandArgs is the parsed commands from the os.Stdin.
+// CommaandArgs is the parsed commands from the rage shell.
 type CommaandArgs struct {
 
 	// Name is the first command parsed on the rage she;;
@@ -26,12 +27,12 @@ type CommaandArgs struct {
 	Args []string
 }
 
-//LoadCommandArgs returns *CommandArgs from the rsc, src is a slice of words
+//LoadCommandArgs returns *CommandArgs from the src, src is a slice of words
 //which are passed to the rage console
 //
 // The assumption is the first element [0] is the command, and the second if any
-// [1] is the subcommand, the reminder os the elemnts are kep as is and acts
-// arguments to the command or subcommand.
+// [1] is the subcommand, the reminder of the elements are kept as is and stored
+// in the returnder *CommandArgs.Args field.
 func LoadCommandArgs(src []string) *CommaandArgs {
 	cmd := &CommaandArgs{}
 	switch len(src) {
@@ -48,7 +49,7 @@ func LoadCommandArgs(src []string) *CommaandArgs {
 	return cmd
 }
 
-//Commander is the instace of the commandline processor, for coomands passed on
+//Commander is the instace of the commandline processor for coomands passed on
 //the rage console
 type Commander struct {
 	Name        string
@@ -58,10 +59,10 @@ type Commander struct {
 	Exec        Command
 }
 
-//Command is an interface for a function that exutes a command.
+//Command is an interface for a function that exeutes a command.
 //
 // It is good practice to always return nil even when there was an error in
-// exution , since if returned error is not nil then the rage console retimates
+// exeution , since if returned error is not nil then the rage console retimates
 //
 // Return error when you want the shell to be exited, for instance you can
 // return an error when implementing the exit command( see function exit) as an
