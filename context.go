@@ -9,8 +9,9 @@ import (
 
 //Context is the environmant in which the commands are executed
 type Context struct {
-	Commands []*Commander
-	Stdout   io.Writer
+	Commands  []*Commander
+	Stdout    io.Writer
+	Workspace string
 }
 
 //Help prints the hep message for the command  or optionally the subcommand  of

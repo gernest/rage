@@ -1,5 +1,7 @@
 package rage
 
+import "time"
+
 var boadrDescription = `
 board is a namespace in which you can manage cards
 calling this command alone will display this message.
@@ -47,4 +49,11 @@ func updateeBoard(ctx *Context, cmd *CommaandArgs) error {
 
 func deleteBoard(ctx *Context, cmd *CommaandArgs) error {
 	return nil
+}
+
+type Board struct {
+	Name      string    `toml:"name"`
+	CreatedAt time.Time `toml:"created_at"`
+
+	Cards Cards `toml:"-"`
 }
