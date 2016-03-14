@@ -257,3 +257,19 @@ func (r *Rage) Run() {
 	}
 	fmt.Println(msg)
 }
+
+func sainizeName(src []string) string {
+	if len(src) > 0 {
+		var rst []string
+		for _, v := range src {
+			switch v {
+			case ",":
+				continue
+			default:
+				rst = append(rst, v)
+			}
+		}
+		return strings.Join(rst, "-")
+	}
+	return ""
+}

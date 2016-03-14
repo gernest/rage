@@ -56,7 +56,7 @@ func board() *Commander {
 // owkward to do that.
 func createBoard(ctx *Context, cmd *CommaandArgs) error {
 	if len(cmd.Args) > 0 {
-		name := cmd.Args[0]
+		name := sainizeName(cmd.Args)
 		if name != "" {
 			bPath := filepath.Join(ctx.Workspace, name)
 			_, err := os.Stat(bPath)
