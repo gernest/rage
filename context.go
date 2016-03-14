@@ -56,5 +56,9 @@ func (ctx *Context) Printhelp(cmd *Commander) {
 	for _, sub := range cmd.Subcommands {
 		table.AddRow("  "+sub.Name, sub.Description)
 	}
-	fmt.Println(table)
+	fmt.Fprintln(ctx, table)
+}
+
+func (ctx *Context) Write(p []byte) (int, error) {
+	return ctx.Stdout.Write(p)
 }

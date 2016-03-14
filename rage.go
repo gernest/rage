@@ -5,6 +5,10 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"log"
+	"os"
+	"os/user"
+	"path/filepath"
 	"runtime"
 	"strings"
 
@@ -150,13 +154,33 @@ type Rage struct {
 	commanders map[string]*Commander
 }
 
-//NewRage retturns a new instance of* Rage
+//NewRage returns a new instance of *Rage
+// TThe working space( directory where rage stores files) is properly set. First
+// his checks if the environment variable RAGE_WORKSPACE is set, if so then it
+// will be used.
+//
+//In case the RAGE_WORKSPACE environment is not set, $HOME/.rage is used
+//instead, note that this direcory will be created if it doesnot exist yet.
 func NewRage() *Rage {
-	return &Rage{
+	r := &Rage{
 		cmds:       make(map[string]Command),
 		commanders: make(map[string]*Commander),
-		ctx:        &Context{},
+		ctx:        &Context{Stdout: os.Stdout},
 	}
+	workspace := os.Getenv("RAGE_WORKSPACE")
+	if workspace == "" {
+		usr, err := user.Current()
+		if err != nil {
+			log.Fatal(err)
+		}
+		workspace = filepath.Join(usr.HomeDir, ".rage")
+		err = os.MkdirAll(workspace, os.ModePerm)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	r.ctx.Workspace = workspace
+	return r
 }
 
 //Register registers cmd into the rage application. registering the same command
@@ -169,6 +193,16 @@ func (r *Rage) Register(c *Commander) {
 func (r *Rage) Exec(cmd *CommaandArgs) error {
 	for _, c := range r.ctx.Commands {
 		if c.Name == cmd.Name {
+			if cmd.Subcommand != "" {
+				for _, sub := range c.Subcommands {
+					if sub.Name == cmd.Subcommand {
+						return sub.Exec(r.ctx, cmd)
+					}
+
+				}
+				fmt.Fprintln(r.ctx, "command not found")
+				return nil
+			}
 			return c.Exec(r.ctx, cmd)
 		}
 	}
