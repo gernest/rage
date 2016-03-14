@@ -258,7 +258,13 @@ func (r *Rage) Run() {
 	fmt.Println(msg)
 }
 
-func sainizeName(src []string) string {
+//sanitizeName join src to a single string suitable to be used as a filename.
+//this removes some of characters that are deemed no worthy to appear as file
+//names.
+//
+// The information removed is irrecoverable, so in some cases it wont be
+// possible to recover the original string strice from the returned string
+func sanitizeName(src []string) string {
 	if len(src) > 0 {
 		var rst []string
 		for _, v := range src {
