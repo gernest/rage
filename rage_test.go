@@ -23,3 +23,21 @@ func TestParseArgsLine(t *testing.T) {
 		}
 	}
 }
+
+func TestSanitizeName(t *testing.T) {
+	sample := []struct {
+		src    []string
+		expect string
+	}{
+		{[]string{"hello", "world"}, "hello-world"},
+		{[]string{"hello", ",", "world"}, "hello-world"},
+	}
+
+	for _, v := range sample {
+		s := sanitizeName(v.src)
+		if s != v.expect {
+			t.Errorf("expected %s got %s", v.expect, s)
+		}
+
+	}
+}
