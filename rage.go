@@ -263,7 +263,7 @@ func (r *Rage) Run() {
 //names.
 //
 // The information removed is irrecoverable, so in some cases it wont be
-// possible to recover the original string strice from the returned string
+// possible to recover the original string slice from the returned string
 func sanitizeName(src []string) string {
 	if len(src) > 0 {
 		var rst []string
