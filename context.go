@@ -62,3 +62,8 @@ func (ctx *Context) Printhelp(cmd *Commander) {
 func (ctx *Context) Write(p []byte) (int, error) {
 	return ctx.Stdout.Write(p)
 }
+
+//Println wites a to the context
+func (ctx *Context) Println(a ...interface{}) {
+	fmt.Fprintln(ctx, a...)
+}
