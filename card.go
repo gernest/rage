@@ -8,6 +8,13 @@ func card() *Commander {
 	}
 }
 
+//Card is a short description of what you would like to do. The message for the
+//card should be answeres to the question  what do I want to do?
+//
+// Example of messages are
+//	* Master golang
+//	* Nail an interview
+//	* Save the world
 type Card struct {
 	ID        int       `toml: 'id"`
 	Message   string    `toml:"message"`
@@ -16,6 +23,8 @@ type Card struct {
 	ClosedAt  time.Time `toml:"closed_at"`
 }
 
+//Cards implemets sort.Sort interface for sorting a slice of cards by ID for
+//sorting a slice of cards by ID.
 type Cards []*Card
 
 func (c Cards) Len() int {
