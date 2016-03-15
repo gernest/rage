@@ -98,7 +98,7 @@ func createBoard(ctx *Context, cmd *CommaandArgs) error {
 				return nil
 			}
 			err = toml.NewEncoder(f).Encode(b)
-			f.Close()
+			_ = f.Close()
 			if err != nil {
 				ctx.Println(err.Error())
 				return nil

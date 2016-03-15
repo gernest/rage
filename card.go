@@ -16,7 +16,7 @@ func card() *Commander {
 //	* Nail an interview
 //	* Save the world
 type Card struct {
-	ID        int       `toml: 'id"`
+	ID        int       `toml:"id"`
 	Message   string    `toml:"message"`
 	Status    string    `toml:"status"`
 	CreatedAt time.Time `toml:"created_at"`
