@@ -91,6 +91,7 @@ func createBoard(ctx *Context, cmd *CommaandArgs) error {
 			b := &Board{}
 			b.Name = strings.Join(cmd.Args, " ")
 			b.CreatedAt = time.Now()
+			b.Status = statusOpne
 			f, err := os.Create(filepath.Join(bPath, boardInfoFile))
 			if err != nil {
 				ctx.Println(err.Error())
