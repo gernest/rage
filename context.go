@@ -67,3 +67,7 @@ func (ctx *Context) Write(p []byte) (int, error) {
 func (ctx *Context) Println(a ...interface{}) {
 	fmt.Fprintln(ctx, a...)
 }
+
+func (ctx *Context) Printf(fomat string, a ...interface{}) {
+	fmt.Fprintf(ctx, fomat, a...)
+}
