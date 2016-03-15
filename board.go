@@ -4,7 +4,17 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
+
+	"github.com/BurntSushi/toml"
+)
+
+const (
+
+	//boardInfoFile is the name of the file that contains board information,. This
+	//file is located inside the board directory.
+	boardInfoFile = "board.info"
 )
 
 var boadrDescription = `
@@ -69,6 +79,21 @@ func createBoard(ctx *Context, cmd *CommaandArgs) error {
 				fmt.Fprintln(ctx, err.Error())
 				return nil
 			}
+			b := &Board{}
+			b.Name = strings.Join(cmd.Args, " ")
+			b.CreatedAt = time.Now()
+			f, err := os.Create(filepath.Join(bPath, boardInfoFile))
+			if err != nil {
+				fmt.Fprintln(ctx, err.Error())
+				return nil
+			}
+			err = toml.NewEncoder(f).Encode(b)
+			f.Close()
+			if err != nil {
+				fmt.Fprintln(ctx, err.Error())
+				return nil
+			}
+			fmt.Fprintln(ctx, " successful created "+name)
 			return nil
 		}
 	}
