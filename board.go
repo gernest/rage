@@ -21,7 +21,7 @@ const (
 	//
 	// These are markers that will be labeled on boards, so deleted boards will
 	// still be in the system but only labelled deleted.
-	statusOpne    = "open"
+	statusOpen    = "open"
 	statusClosed  = "closed"
 	statusDeleted = "deleted"
 )
@@ -91,7 +91,7 @@ func createBoard(ctx *Context, cmd *CommaandArgs) error {
 			b := &Board{}
 			b.Name = strings.Join(cmd.Args, " ")
 			b.CreatedAt = time.Now()
-			b.Status = statusOpne
+			b.Status = statusOpen
 			f, err := os.Create(filepath.Join(bPath, boardInfoFile))
 			if err != nil {
 				ctx.Println(err.Error())
