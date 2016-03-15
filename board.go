@@ -14,6 +14,16 @@ const (
 	//boardInfoFile is the name of the file that contains board information,. This
 	//file is located inside the board directory.
 	boardInfoFile = "board.info"
+
+	// board status. It is bad practice if we delete the whole board from the
+	// disk, just in case the user later changed his ming( forget about version
+	// control)
+	//
+	// These are markers that will be labeled on boards, so deleted boards will
+	// still be in the system but only labelled deleted.
+	statusOpne    = "open"
+	statusClosed  = "closed"
+	statusDeleted = "deleted"
 )
 
 var boadrDescription = `
@@ -110,6 +120,7 @@ func deleteBoard(ctx *Context, cmd *CommaandArgs) error {
 
 type Board struct {
 	Name      string    `toml:"name"`
+	Status    string    `toml:"status"`
 	CreatedAt time.Time `toml:"created_at"`
 
 	Cards Cards `toml:"-"`
