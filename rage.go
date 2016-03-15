@@ -200,13 +200,13 @@ func (r *Rage) Exec(cmd *CommaandArgs) error {
 					}
 
 				}
-				fmt.Fprintln(r.ctx, "command not found")
+				r.ctx.Println("command not found")
 				return nil
 			}
 			return c.Exec(r.ctx, cmd)
 		}
 	}
-	fmt.Println("unrecogised command: " + cmd.Name)
+	r.ctx.Println("unrecogised command: " + cmd.Name)
 	return nil
 }
 
