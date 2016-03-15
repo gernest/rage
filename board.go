@@ -119,6 +119,11 @@ func deleteBoard(ctx *Context, cmd *CommaandArgs) error {
 	return nil
 }
 
+//Board is the module(or container) in which cards are stored. This is a way to
+//organize your ideas. Just think of the board as a blackboard in which you will
+//write down what you think you should do.
+//
+// Inside rage, boards are directories, Name should be short and meaningful
 type Board struct {
 	Name      string    `toml:"name"`
 	Status    string    `toml:"status"`
