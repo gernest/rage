@@ -1,7 +1,6 @@
 package rage
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -71,12 +70,12 @@ func createBoard(ctx *Context, cmd *CommaandArgs) error {
 			bPath := filepath.Join(ctx.Workspace, name)
 			_, err := os.Stat(bPath)
 			if os.IsExist(err) {
-				fmt.Fprintf(ctx, "The board %s already exist\n", name)
+				ctx.Printf("The board %s already exist\n", name)
 				return nil
 			}
 			err = os.MkdirAll(bPath, os.ModePerm)
 			if err != nil {
-				fmt.Fprintln(ctx, err.Error())
+				ctx.Println(err.Error())
 				return nil
 			}
 			b := &Board{}
@@ -84,20 +83,20 @@ func createBoard(ctx *Context, cmd *CommaandArgs) error {
 			b.CreatedAt = time.Now()
 			f, err := os.Create(filepath.Join(bPath, boardInfoFile))
 			if err != nil {
-				fmt.Fprintln(ctx, err.Error())
+				ctx.Println(err.Error())
 				return nil
 			}
 			err = toml.NewEncoder(f).Encode(b)
 			f.Close()
 			if err != nil {
-				fmt.Fprintln(ctx, err.Error())
+				ctx.Println(err.Error())
 				return nil
 			}
-			fmt.Fprintln(ctx, " successful created "+name)
+			ctx.Println(" successful created " + name)
 			return nil
 		}
 	}
-	fmt.Fprintln(ctx, " you need to specify the name of the board")
+	ctx.Println(" you need to specify the name of the board")
 	return nil
 }
 
