@@ -4,7 +4,6 @@ package rage
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"os/user"
@@ -120,7 +119,7 @@ func printShort(ctx *Context, cmd *Commander) {
 	for _, sub := range cmd.Subcommands {
 		table.AddRow("  "+sub.Name, sub.Short)
 	}
-	fmt.Println(table)
+	ctx.Println(table)
 }
 
 func clear() *Commander {
@@ -133,7 +132,7 @@ func clear() *Commander {
 func clearScreen(ctx *Context, args *CommaandArgs) error {
 	switch runtime.GOOS {
 	case "darwin", "linux":
-		fmt.Print("\033[H\033[2J")
+		ctx.Println("\033[H\033[2J")
 	}
 	return nil
 }
@@ -245,7 +244,7 @@ func (r *Rage) Run() {
 		}
 		words, err := parseArgsLine(line)
 		if err != nil {
-			fmt.Println(err.Error())
+			r.ctx.Println(err.Error())
 			continue
 		}
 		cmd := LoadCommandArgs(words)
@@ -255,7 +254,7 @@ func (r *Rage) Run() {
 			break
 		}
 	}
-	fmt.Println(msg)
+	r.ctx.Println(msg)
 }
 
 //sanitizeName join src to a single string suitable to be used as a filename.
