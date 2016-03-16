@@ -129,5 +129,20 @@ type Board struct {
 	Status    string    `toml:"status"`
 	CreatedAt time.Time `toml:"created_at"`
 
-	Cards Cards `toml:"-"`
+	Cards Cards `toml:"cards"`
+}
+
+func (b *Board) NewCard(ctx *Context, cmd *CommaandArgs) error {
+	sort.Sort(b.Cards)
+	mag := sanitizeName(cmd.Args)
+	if msg != "" {
+		c := &Card{
+			CreatedAt: time.Now(),
+			Message:   msg,
+		}
+		if len(b.Cards) > 0 {
+			c.ID = len(b.Cards) + 1
+		}
+	}
+
 }
